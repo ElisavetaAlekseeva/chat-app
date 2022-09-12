@@ -11,7 +11,7 @@ class UserProfile(models.Model):
     image = models.ImageField(default='defaultimg.jpg', null=True, blank=True)
     hobbies = models.CharField(max_length=200, null=True)
     location = models.CharField(max_length=100, blank=True)
-    friends = models.ManyToManyField('UserProfile', related_name='users_friends', default='')
+    friends = models.ManyToManyField('UserProfile', related_name='users_friends', default='', blank=True)
     user_friend = models.ManyToManyField('Friend', related_name='user_friend', default='',blank=True)
 
     def __str__(self) -> str:
