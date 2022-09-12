@@ -1,0 +1,17 @@
+{% load static %}
+
+    <form class="form form-in" method="post">
+        {% csrf_token %}
+        
+        <div class="data">
+            <input type="text" name="username" placeholder="Login">
+            <input type="password" name="password" placeholder="Password">
+        </div>
+        
+        <div class="button">
+            <button type="submit">Signin</button>
+        </div>
+    </form>
+
+
+

@@ -1,0 +1,184 @@
+{% load static %}
+{% block content %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/4606228898.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous" defer></script>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+    <title>Document</title>
+</head>
+<body>
+
+{% include 'partials/sidebar.html' %}
+
+
+{% if user != current_user %}
+
+    <div class="container">
+
+        <div class="section">  
+            
+            <div class="col col-1">
+                <div class="info">
+                    <div class="location">
+                        <i class="fa-solid fa-location-dot"></i>
+                        {{user_profile.location}}
+                    </div>
+                    <div class="email">
+                        <i class="fa-solid fa-at"></i>
+                        <a href="#"> {{user.email}} </a>
+                    </div>
+                    <div class="quote">
+                        <i class="fa-solid fa-quote-left"></i>
+                        <p>mama papa ya </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-2">
+                <div class="header">
+                    <div class="name">
+                        {{user_profile.name}}
+                    </div>
+                    <div id="icon" class="icon">
+                        {% if user_profile in current_user_friends %}
+                            <i class="fa-solid fa-user-check"></i>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="image">
+                    <img id='pr_image' src="{{user_profile.image.url}}" alt="">
+                </div>
+                <div class="buttons">
+                    <div class="message">
+                        <a href="{% url 'chats' current_user.id %}">
+                            <button class="btn" role="button">
+                                <i class="fa-solid fa-envelope"></i>
+                            </button>
+                        </a>
+                    </div>
+                    <div class="friend-status">
+                        {% if user_profile in current_user_friends %}
+                            <a href="{% url 'delete_friend' user.id %}">
+                                <button type="button" class="btn btn-status">
+                                    <i class="fa-solid fa-user-minus"></i>
+                                </button>
+                            </a>
+
+                        {% elif user_profile not in current_user_friends and not sent_friend_request %}
+                            <a href="{% url 'send_friend_request' user.id %}">
+                                <button type="button" class="btn btn-status">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                </button>
+                            </a>
+                            
+                        {% elif user_profile not in current_user_friends and sent_friend_request%}
+                            <a href="{% url 'delete_friend_request' user.id %}">
+                                <button type="button" class="btn btn-status">
+                                    <i class="fa-solid fa-user-minus"></i>
+                                </button>
+                            </a>
+                        {%endif%}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-3">
+                <div class="friends_link">
+                    <h1><a href="{%url 'friends' user_profile.id%}">Friends:</a></h1>
+                </div>
+
+                <div class="friends">
+                    {% for friend in user_friends %}
+                        <div class="friend">
+                            <a href="{% url 'profile' friend.id %}">
+                                <div class="friend_img"><img id='pr_image' src="{{user_profile.image.url}}" alt=""> </div>
+                                <div class="friend_name">{{ friend.name }}</div> 
+                            </a>
+                        </div>                    
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    {% else %}
+        <div class="container">
+            
+            
+
+        <div class="section">  
+
+                <div class="col col-1">
+                    <div class="info">
+                        <div class="location">
+                            <i class="fa-solid fa-location-dot"></i>
+                            {{current_user_profile.location}}
+                        </div>
+                        <div class="email">
+                            <i class="fa-solid fa-at"></i>
+                            <a href="#"> {{current_user.email}} </a>
+                        </div>
+                        <div class="quote">
+                            <i class="fa-solid fa-quote-left"></i>
+                            <div class="text">
+                                Bla Bla
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col col-2">
+                    <div class="header">
+                        <div class="name">
+                            {{user_profile.name}} 
+                        </div>
+                        <!-- <div class="update">
+                            <a href="{% url 'create_profile' %}">UPDATE</a>
+                        </div> -->
+                        <div id="icon" class="icon">
+                            <a class="a-icon" href="{% url 'create_profile' %}"><i class="fa-solid fa-pen"></i></a>
+                        </div>
+                    </div>
+                    <div class="image">
+                        <img cid='pr_image' src="{{current_user_profile.image.url}}" alt="">
+                    </div>
+                    <div class="buttons">
+                        
+                    </div>
+                </div>
+
+                <div class="col col-3">
+                    <div class="friends_link">
+                        <h1><a href="{%url 'friends' current_user.id%}">Friends:</a></h1>
+                    </div>
+
+                    <div class="friends">
+                        {% for friend in current_user_friends %}
+                            <div class="friend">
+                                <a href="{% url 'profile' friend.id %}">
+                                    <div class="friend_img"><img cid='pr_image' src="{{user_profile.image.url}}" alt=""></div>
+                                    <div class="friend_name">{{friend.name}}</div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endif %}
+
+{% endblock content%}
+</body>
+</html>

@@ -1,0 +1,86 @@
+body{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+}
+
+.left-side{
+    background-color: #f7f7f7;
+    flex: 60%;
+    flex: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.left-side form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.left-side .data{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.left-side .data input{
+    margin: 10px;
+}
+
+.right-side{
+    flex: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #afefd4a9;
+}
+
+.right-side .title, .left-side .title{
+    font-size: 38px;
+    font-weight: 700;
+}
+
+.right-side .text, .left-side .data{
+    text-align: center;
+    padding: 60px 0;
+    font-weight: 500;
+}
+
+
+button a{
+    text-decoration: none;  
+}
+
+button {
+    padding: 15px 25px;
+    font-size: 24px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    background-color: #fff;
+    color: #2ab57b;
+    border: none;
+    border-radius: 15px;
+}
+
+.left-side button{
+    background-color: #2ab57b !important;
+    color: #ffffff !important;
+}
+  
+button:hover {
+    background-color:  #13dd89;
+    color: #ffffff;
+}
+  
+button:active {
+    background-color:  #13dd89;
+    box-shadow: inset 3px 3px rgba(55, 54, 54, 0.339);
+}

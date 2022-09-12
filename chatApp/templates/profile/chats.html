@@ -1,0 +1,253 @@
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/4606228898.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous" defer></script>
+    <link rel="stylesheet" href="{% static 'css/chats.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    
+    
+    {% include 'partials/sidebar.html' %}
+    <div class="container">
+
+            <div class="left-side">
+
+                <div class="header">
+                    
+                    <div class="searching">
+                        <input type="text" placeholder="Search..">
+                    </div>
+                    
+                </div>
+
+                <div class="main">
+                    {% for friend in friends %}
+                        <div class="friend" id="{{friend.id}}" onclick="getChat('{{friend.id}}', '{{friend.name}}')">
+                            <a href="#">
+                                <div class="content">
+                                    <img src="{{friend.image.url}}" alt="">
+                                    <div class="details">
+                                        <span>{{friend.name}}</span>
+                                        <p class="lastMessage">{{friend.id}}</p>
+                                    </div>
+                                </div>
+
+                                <div class="unread">
+                                    <div class="unread-messages">
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="right-side" id="right-side">
+
+            </div>
+
+    </div>
+
+
+    <script>
+
+        let friendId = undefined;
+        let friendName = undefined;
+        setInterval(getNotification, 1000)
+  
+        function getNotification(){
+            let url = "{% url 'chatNotification' %}"
+            fetch(url)
+            .then(res=>res.json())
+            .then(data=>{
+            let chatNotificationBtn = document.getElementsByClassName("unread-messages")
+            for(let i = 0; i<data.length; i++){
+                if (data[i] != 0) {
+                    chatNotificationBtn[i].style.display = 'block';
+                }
+                if (data[i] == 0) {
+                    chatNotificationBtn[i].style.display = 'none';
+                }
+            }
+            })
+            .catch(error => console.log(error))
+        }
+
+        function getChat(id, name){
+
+            if (!friendId) {
+                setInterval(getNewMessages, 800)
+            }
+
+            if (!friendId) {
+                f = document.getElementById(id)
+                f.style.background = '#13dd89'
+            } else {
+                f = document.getElementById(friendId)
+                f.style.background = 'white'
+                f = document.getElementById(id)
+                f.style.background = '#13dd89'
+            }
+
+            if (friendId != id){
+                friendId = id
+                friendName = name
+                const rightSide = document.getElementById("right-side")
+                rightSide.innerHTML = ''
+                const div = document.createElement('div')
+                div.className = 'chat-area'
+
+                div.innerHTML = `
+                        <div class="header">
+                            <a href="/user-profile/${friendId}">
+                                <img id='pr_image' src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png" alt="">
+                                <div class="details">
+                                    <span>${friendName}</span>
+                                </div>
+                            </a>
+                        </div>
+            
+                        <div class="chat-window" id="chat-window">
+                        
+                        </div>
+            
+            
+                        <div id="myform" class="typing-area">
+                            {% csrf_token %}
+                            
+                            <textarea id="msg"></textarea>
+                            <button id = "submit" onclick="sendMessage()" ><i class="fa-regular fa-paper-plane"></i></button>
+                        </div>`
+                
+                rightSide.appendChild(div)
+                div.scrollIntoView()
+
+                url = `/chat/${id}`
+                fetch(url)
+                .then(res=>res.json())
+                .then(data=>{
+                    for (let i = 0; i < data.length; i++) {
+                        create_message(data[i]);
+                    }
+                })
+                const objDiv = document.getElementById("chat-window");
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }
+        }  
+
+        document.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13 && !event.shiftKey) {
+            sendMessage()
+            event.preventDefault();
+        }
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        function create_message(message){
+            let chatWindow = document.getElementById('chat-window')
+            let div = document.createElement('div')
+
+            div.classList.add('message')
+            if (message.sender_id == '{{user.id}}') {
+                div.innerHTML = `<div class="message outgoing">
+                                    <div class="details">
+                                        <p>${message.message}</p>
+                                    </div>
+                                </div>`
+            } else {
+                div.innerHTML = `<div class="message incoming">
+                                    <div class="details">
+                                        <p>${message.message}</p>
+                                    </div>
+                                </div>` 
+            }
+            
+            chatWindow.appendChild(div)
+            div.scrollIntoView()
+        }
+
+        function sendMessage(){
+            let chatMessage = document.getElementById("msg").value
+            chatMessage = chatMessage.slice(0, -1)
+            document.getElementById("msg").value = ''
+            const patern = /^\s*$/
+            if (!patern.test(chatMessage) && chatMessage != ''){
+        
+                const data = { msg: chatMessage };
+                fetch(`/send_message/${friendId}`, {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(data),
+                }).then(response => response.json())        
+        
+                let chatWindow = document.getElementById('chat-window')
+                let div = document.createElement('div')
+        
+                div.classList.add('message')
+        
+                div.innerHTML = `<div class="message outgoing">
+                                    <div class="details">
+                                        <p>${data.msg}</p>
+                                    </div>
+                                </div>` 
+                
+                chatWindow.appendChild(div)
+                div.scrollIntoView()
+            }
+        }
+
+        function getNewMessages() {
+            fetch(`/not_seen/${friendId}`)
+                .then(e => e.json())
+                .then(messages => {
+                    for (message in messages) {
+                        create_message(messages[message]);
+                    }
+                })
+        }
+
+        function getLastMessages() {
+            const lastMessages = document.getElementsByClassName("lastMessage")
+            for (let i = 0; i < lastMessages.length; i++) {
+                fetch(`/get_last_message/${lastMessages[i].innerText}`)
+                .then(e => e.json())
+                .then(message => {
+                    lastMessages[i].innerText = message.message
+                    lastMessages[i].style.color = 'black'
+                })
+            }
+        }
+
+        getLastMessages()
+
+    </script>
+</body>
+</html>
+{% endblock content%}

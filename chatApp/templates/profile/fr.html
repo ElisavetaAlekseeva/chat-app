@@ -1,0 +1,186 @@
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/4606228898.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous" defer></script>
+    <link rel="stylesheet" href="{% static 'css/friends.css' %}">
+
+
+    <title>Document</title>
+</head>
+<body>
+
+    user: {{request.user.username}} <br>
+
+        <div class="all-users">
+            <div class="header">
+                <div class="all-users">
+                    <h2>All Users</h2>
+                </div>
+                <div class="searching">
+
+                </div>
+            </div>
+            {% for user in users %}
+                {% if user != current_user and user not in current_user_friends %}
+                    <div class="user">
+                        <div class="about-user">
+                            <a href="{%url 'profile' user.id %}">
+                                <div class="user-image"><img src="{{user.userprofile.image}}" alt=""></div>
+                                <div class="user-name">{{user}}</div>
+                                <div class="user-location">{{user.userprofile.location}}</div>
+                            </a>
+                        </div>
+                        <div class="send-request">
+                            <a href="{% url 'send_friend_request' user.id %}">
+                                <button type="button" class="btn btn-success btn-lg btn-block mb-2">
+                                    Send Friend Request
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <br>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="friend">
+            <div class="header">
+                <div class="my-friends">
+                    <h2>My Friends</h2>
+                </div>
+                <div class="amount">
+                    {{current_user_friends.count}}
+                </div>
+                <div class="searching">
+
+                </div>
+            </div>
+
+            <div class="friends">
+                {% for friend in current_user_friends %}
+                    <div class="friend">
+                        <a href="{% url 'profile' friend.id %}">
+                            <div class="about-friend">
+                                <div class="image">
+                                    <img src="{{friend.image}}" alt="">
+                                </div>
+                                <div class="friend-name">
+                                    <p>{{friend.name}}</p>
+                                </div>
+                                <div class="friend-location">
+                                    <p>{{friend.location}}</p>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="btn-chat">
+                            <a href="{% url 'chat' friend.id %}"><i class="fa-regular fa-message"></i></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+
+
+        <br> <br> <br> <br>
+        my friends: <br>
+        {% for friend in current_user_friends %}
+            
+            
+            <a href="{% url 'profile' friend.id %}">
+                <button type="button" class="btn btn-info btn-sm btn-block mb-2">
+                View Profile
+                </button>
+            </a>
+        
+            <a href="{% url 'delete_friend' friend.id %}">
+                <button type="button" class="btn btn-info btn-sm btn-block mb-2">
+                Remove from Friends
+                </button>
+            </a>
+            <br>
+        {% endfor %}
+
+
+            {% for request in rec_friend_requests %}
+                <h5>From: {{ request.sendser }}</h5>
+                <a href="{% url 'accept_friend_request' request.pk %}">
+                <button type="button" class="btn btn-info btn-sm btn-block mb-2">
+                Accept Friend Request
+                </button>
+                </a>
+                <a href="{% url 'decline_friend_request' request.pk %}">
+                <button type="button" class="btn btn-info btn-sm btn-block mb-2">
+                Decline Friend Request
+                </button>
+                </a>
+                <hr>
+            {% endfor %}
+        
+        <div>Requests Sent</div>
+        <div>
+            {% for sent in sent_friend_requests %}
+                <h5>Send to: {{ sent.receiver }}</h5>
+                <a href="{% url 'delete_friend_request' sent.receiver.id %}">
+                <button type="button" class="btn btn-info btn-sm btn-block mb-2">
+                Cancel Friend Request
+                </button>
+                </a>
+            {% endfor %}
+
+    {% endblock content%}
+
+</body>
+</html>
+
+
+
+
+
+
+
+<!-- log up -->
+
+<div id="signup">
+    <div class="text">
+        <div class="header">
+            <i id="text_icon" class="fa-solid fa-message"></i>
+            <span id="logo">CHAT</span>
+            <h2>Chat can be logged in with email</h2>
+        </div>
+
+        <div class="container">
+            <i class="item icon fa-solid fa-user"></i>
+            <span class="item">Single account for VK services and partners</span>
+
+            <i class="item icon fa-solid fa-lock"></i>
+            <span class="item">Reliable protection linked to email</span>
+
+            <i class="item icon fa-solid fa-arrow-right-to-bracket"></i>
+            <span class="item">Quick entry in one click</span>
+        </div>
+    </div>
+
+    <div class="form">
+        <i id="form_icon" class="fa-solid fa-message"></i>
+        <h1>Enter your data</h1>
+        <form id="signup_form" class="form form-up" method="post">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username">
+            <input type="email" name="email" placeholder="Email">
+            <input type="password" name="password" placeholder="Password">
+            <input type="password" name="password2" placeholder="Confirm Password">
+            <div class="buttons">
+                <button type="submit">Signup</button>
+                <button id="close_signup_btn" type="button"><a href="{% url 'signin' %}">Cancel</a></button>
+            </div>
+        </form>
+    </div>
+</div>

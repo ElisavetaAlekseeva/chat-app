@@ -1,0 +1,35 @@
+<style>
+    .sidebar {
+        height: 100%;
+        width: 75px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+    
+    .sidebar a {
+        padding-left: 25px;
+        padding-top: 100px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #2ab57b;
+        display: block;
+        transition: 0.3s;
+    }
+    
+    .sidebar a:hover {
+        color: #13dd89;
+    }
+</style>
+
+<div id="sb" class="sidebar">
+    <a href="{% url 'profile' current_user.id%}" id="myPage"><i class="fa-solid fa-user"></i></a>
+    <a href="{% url 'friends' current_user.id %}" id="frineds"><i class="fa-solid fa-users"></i></a>
+    <a href="{% url 'chats' current_user.id %}" id="chats"><i class="fa-sharp fa-solid fa-comments"></i></a>
+    <a href="{% url 'signout' %}" id="logOut"><i class="fa-solid fa-right-from-bracket"></i></a>
+</div>

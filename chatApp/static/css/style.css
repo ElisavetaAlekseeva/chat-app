@@ -1,0 +1,56 @@
+body {
+    background: radial-gradient(circle at 10% 20%, rgb(186, 190, 245) 0%, rgb(192, 192, 245) 33.1%, rgb(218, 203, 246) 90%);
+    padding: 1rem;
+    height: 100vh;
+}
+
+.sections{
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 10% 10% 17% 17% 16% 10% 10%;
+    gap: 15px 10px;
+    justify-items: center;
+}
+
+.section{
+    grid-row-start: 2;
+    grid-row-end: 6;
+}
+
+.image{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    height: 70rem;
+}
+
+.tel_img{
+    border-radius: 100px;
+    height: 70rem;
+    width: 50rem;
+    opacity: 0.7;
+}
+
+.login_window{
+    grid-column-start: 2;
+}
+
+.registration{
+    margin: 30px;
+    padding: 20px;
+    background-color: rgba(232, 232, 232, 0.387);
+    border-radius: 50px;
+}
+
+.icon{
+    align-items: center;
+    font-size: 100px;
+    text-align: center;
+}
+
+
+@media only screen and (max-width: 700px) {
+    .tel_img {display: none;}
+    .reg_window {justify-content: center;}
+  }
+
