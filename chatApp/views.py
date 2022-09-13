@@ -235,6 +235,8 @@ def friends(request, pk):
     current_user = request.user
     current_user_profile = current_user.userprofile
     current_user_friends = current_user_profile.friends.all()
+    friend_request_sender = FriendRequest.sender
+
 
     user = get_object_or_404(User, pk=pk)
     user_profile = UserProfile.objects.get(user = user)
@@ -242,6 +244,7 @@ def friends(request, pk):
 
     users = User.objects.all()
 
+    print('----------')
 
     sent_friend_requests = FriendRequest.objects.filter(sender=current_user_profile)
     rec_friend_requests = FriendRequest.objects.filter(receiver=current_user_profile)
@@ -249,7 +252,7 @@ def friends(request, pk):
     context = {'user':user, 'current_user':current_user, 'friends':friends, 
                 'users':users, 'sent_friend_requests': sent_friend_requests,
                 'rec_friend_requests': rec_friend_requests, 'user_profile': user_profile,
-                 'current_user_friends': current_user_friends}
+                 'current_user_friends': current_user_friends, 'friend_request_sender': friend_request_sender}
 
 
     return render(request, 'profile/friends.html', context)

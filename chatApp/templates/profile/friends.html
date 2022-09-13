@@ -27,19 +27,85 @@
             </div>
         </div>
 
-        <div class="search">
-            <div class="searching">
-                <input type="text"  placeholder="Search..">
-            </div>
-        </div>
 
         <div class="main">
-            {% for friend in current_user_friends %}
+            Notifications:
+            <br>
+            <div class="notifications">
+                {% for request in rec_friend_requests %}
+                <!-- From: {{ request.sendser }} -->
+                <div class="notification">
+                            <!-- <div class="content">
+                                <img id='pr_image' src="#" alt="">
+                                <div class="details">
+                                    <span>{{user.userprofile.name}}</span>
+                                    <p>{{user.userprofile.location}}</p>
+                                </div>
+                            </div> -->
 
+                        <div class="buttons">
+                            <div class="btn accept-request">
+                                <a href="{% url 'accept_friend_request' request.pk %}">
+                                    <button type="button" class="btn btn-info btn-sm btn-block mb-2">
+                                    Accept Friend Request
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="btn decline-request">
+                                <a href="{% url 'decline_friend_request' request.pk %}">
+                                    <button type="button" class="btn btn-info btn-sm btn-block mb-2">
+                                    Decline Friend Request
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        <hr>
+
+
+            All Users:
+            <br>        
+            <div class="users">
+                {% for user in users %}
+                {% if user != current_user and user.userprofile not in current_user_friends %}
+
+                <div class="user">
+                    <a href="{% url 'profile' user.id %}">
+                        <div class="content">
+                            <img id='pr_image' src="{{user_profile.image.url}}" alt="">
+                            <div class="details">
+                                <span>{{user.userprofile.name}}</span>
+                                <p>{{user.userprofile.location}}</p>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="buttons">
+                        <div class="btn send-request">
+                            <a href="{% url 'send_friend_request' user.id %}">
+                                <button type="button" class="btn btn-success btn-lg btn-block mb-2">
+                                    Send Friend Request
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>      
+                {% endif %}
+            {% endfor %}
+        </div> 
+
+<hr>
+My Friends:
+<br>
+        <div class="friends">
+            {% for friend in current_user_friends %}
                 <div class="friend">
+      
                     <a href="{% url 'profile' friend.id %}">
                         <div class="content">
-                            <img id='pr_image' src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png" alt="">
+                            <img id='pr_image' src="{{user_profile.image.url}}" alt="">
                             <div class="details">
                                 <span>{{friend.name}}</span>
                                 <p>{{friend.location}}</p>
@@ -51,7 +117,7 @@
                             <a href="{% url 'chats' current_user.id %}"><i class="fa-regular fa-message"></i></a>
                         </div>
                         <div class="btn delete-friend">
-                            <a href="#" class="trash-bin"><i class="fa-solid fa-trash"></i></a>
+                            <a href="{% url 'delete_friend' friend.id %}" class="trash-bin"><i class="fa-solid fa-trash"></i></a>
                         </div>
                     </div>
                 </div>
