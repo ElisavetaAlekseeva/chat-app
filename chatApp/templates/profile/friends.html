@@ -33,16 +33,8 @@
             <br>
             <div class="notifications">
                 {% for request in rec_friend_requests %}
-                <!-- From: {{ request.sendser }} -->
                 <div class="notification">
-                            <!-- <div class="content">
-                                <img id='pr_image' src="#" alt="">
-                                <div class="details">
-                                    <span>{{user.userprofile.name}}</span>
-                                    <p>{{user.userprofile.location}}</p>
-                                </div>
-                            </div> -->
-
+                        from: {{request.sender}}
                         <div class="buttons">
                             <div class="btn accept-request">
                                 <a href="{% url 'accept_friend_request' request.pk %}">

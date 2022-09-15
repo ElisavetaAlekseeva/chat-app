@@ -244,10 +244,13 @@ def friends(request, pk):
 
     users = User.objects.all()
 
-    print('----------')
+    sent_friend_requests = FriendRequest.objects.filter(sender=current_user.userprofile)
+    rec_friend_requests = FriendRequest.objects.filter(receiver=current_user.userprofile)
 
-    sent_friend_requests = FriendRequest.objects.filter(sender=current_user_profile)
-    rec_friend_requests = FriendRequest.objects.filter(receiver=current_user_profile)
+    print('---------')
+    print(friend_request_sender)
+
+
 
     context = {'user':user, 'current_user':current_user, 'friends':friends, 
                 'users':users, 'sent_friend_requests': sent_friend_requests,
