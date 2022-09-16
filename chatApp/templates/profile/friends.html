@@ -68,7 +68,7 @@
                 <div class="user">
                     <a href="{% url 'profile' user.id %}">
                         <div class="content">
-                            <img id='pr_image' src="{{user_profile.image.url}}" alt="">
+                            <img id='pr_image' src="{{user.userprofile.image.url}}" alt="">
                             <div class="details">
                                 <span>{{user.userprofile.name}}</span>
                                 <p>{{user.userprofile.location}}</p>
@@ -98,7 +98,7 @@ My Friends:
       
                     <a href="{% url 'profile' friend.id %}">
                         <div class="content">
-                            <img id='pr_image' src="{{user_profile.image.url}}" alt="">
+                            <img id='pr_image' src="{{friend.image.url}}" alt="">
                             <div class="details">
                                 <span>{{friend.name}}</span>
                                 <p>{{friend.location}}</p>

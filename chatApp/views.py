@@ -136,6 +136,8 @@ def create_profile(request):
 
     return render(request, 'create_profile.html', context)
 
+    
+
 def chats(request, pk):
     current_user = request.user
     user = request.user.userprofile
@@ -334,13 +336,15 @@ def accept_friend_request(request, pk):
 def decline_friend_request(request, pk):
 
     receiver = request.user.userprofile
-
     friend_request = FriendRequest.objects.get(pk=pk)
+
+    receiver_id = friend_request.receiver.id
 
     if friend_request.receiver == receiver:
         friend_request.delete()
 
-        return redirect ('friends', pk=pk)
+        return redirect ('friends', pk=receiver_id)
+
     
     else:
         accept_friend_request()

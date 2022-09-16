@@ -19,7 +19,7 @@
         <div class="chat-area">
             <div class="header">
                 <a href="{% url 'profile' friend.id %}">
-                    <img id='pr_image' src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__480.png" alt="">
+                    <img id='pr_image' src="{{friend.image.url}}" alt="">
                     <div class="details">
                         <span>{{friend.name}}</span>
                     </div>

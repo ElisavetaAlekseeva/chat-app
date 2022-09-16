@@ -167,7 +167,7 @@
                         {% for friend in current_user_friends %}
                             <div class="friend">
                                 <a href="{% url 'profile' friend.id %}">
-                                    <div class="friend_img"><img cid='pr_image' src="{{user_profile.image.url}}" alt=""></div>
+                                    <div class="friend_img"><img cid='pr_image' src="{{friend.image.url}}" alt=""></div>
                                     <div class="friend_name">{{friend.name}}</div>
                                 </a>
                             </div>
