@@ -146,6 +146,7 @@
 
         document.addEventListener("keyup", function(event) {
         if (event.keyCode === 13 && !event.shiftKey) {
+            document.getElementById("msg").value = document.getElementById("msg").value.slice(0,-1)
             sendMessage()
             event.preventDefault();
         }
@@ -193,7 +194,6 @@
 
         function sendMessage(){
             let chatMessage = document.getElementById("msg").value
-            chatMessage = chatMessage.slice(0, -1)
             document.getElementById("msg").value = ''
             const patern = /^\s*$/
             if (!patern.test(chatMessage) && chatMessage != ''){
