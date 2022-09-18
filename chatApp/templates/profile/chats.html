@@ -54,6 +54,8 @@
 
             </div>
 
+            <div class="last_sent_msg">{{last_sent_msg.id}}</div>
+
     </div>
 
 
@@ -175,9 +177,11 @@
 
             div.classList.add('message')
             if (message.sender_id == '{{user.id}}') {
-                div.innerHTML = `<div class="message outgoing">
+                div.innerHTML = `<div class="message outgoing" id='${message.msg_id}'>
                                     <div class="details">
-                                        <p>${message.message}</p>
+                                        <p>${message.message} 
+                                            <button onclick="delete_message(${message.msg_id})" class="trash-bin delete-msg"><i class="fa-solid fa-trash"></i></button>
+                                        </p>
                                     </div>
                                 </div>`
             } else {
@@ -215,12 +219,15 @@
         
                 div.innerHTML = `<div class="message outgoing">
                                     <div class="details">
-                                        <p>${data.msg}</p>
+                                        <p>${data.msg}
+                                            <button class="trash-bin delete-msg" onclick="delete_message()"><i class="fa-solid fa-trash"></i></button>
+                                        </p>
                                     </div>
                                 </div>` 
                 
                 chatWindow.appendChild(div)
                 div.scrollIntoView()
+
             }
         }
 
@@ -247,6 +254,15 @@
         }
 
         getLastMessages()
+
+        function delete_message(id){
+            fetch(`/delete_message/${id}`)
+                .then(e => e.json())
+                .then(r => {
+                    message = document.getElementById(r);
+                    message.style.display = 'none';
+                })
+        }
 
     </script>
 </body>

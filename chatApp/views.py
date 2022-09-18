@@ -1,5 +1,7 @@
+from base64 import urlsafe_b64decode
 from calendar import c
 from cmath import e
+from tokenize import generate_tokens
 from urllib import response
 from venv import create
 from wsgiref.util import request_uri
@@ -16,6 +18,13 @@ from itertools import chain
 from django.contrib.auth import logout, login
 from django.http import JsonResponse
 import json
+from chat import settings
+from django.core.mail import EmailMessage, send_mail
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from .tokens import generate_token
 
 
 def signup(request):
@@ -28,12 +37,10 @@ def signup(request):
 
         if password == password2:
             if User.objects.filter(username=username).exists():
-                messages.info(request, 'Your Username is taken')
                 return redirect('signup')
 
-            elif User.objects.filter(email=email).exists():
-                messages.info(request, 'Your Email is taken')
-                return redirect('signup')
+            # elif User.objects.filter(email=email).exists():
+            #     return redirect('signup')
 
             else:
                 user = User.objects.create_user(username=username, email=email, password=password)
@@ -44,7 +51,38 @@ def signup(request):
 
                 user_model = User.objects.get(username=username)
                 user_profile = UserProfile.objects.create(user_id=user_model.id)
+                user.is_active = False
+
                 user_profile.save()
+
+                messages.success(request, 'Your account has been successfully created. We have sent you a confirmation email, please confirm your email address in order to activate your account.')
+
+                # EMAIL
+                subject = 'Welcome to Lisa Chat App!'
+                message = f'Hello {user.username}! \n Welcome to Lisa Chat App! \n We sent you a confirmation email, please confirm your email address in order to activate your account.'
+                from_email = settings.EMAIL_HOST_USER
+                to_list = [user.email]
+                send_mail(subject, message, from_email, to_list, fail_silently=True)
+
+                current_site = get_current_site(request)
+                email_subject = 'Confirm your email @ Lisa Chat App'
+                message2 = render_to_string('email_confirmation.html', {
+                            'name': user.username,
+                            'domain': current_site.domain,
+                            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                            'token': generate_token.make_token(user)
+                            })
+
+                email = EmailMessage(
+                    email_subject,
+                    message2,
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                )
+                email.fail_silently = True
+                email.send()
+
+
                 return redirect('create_profile')
 
         else:
@@ -53,6 +91,19 @@ def signup(request):
     
     else: 
         return render(request, 'signup.html')
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    
+    if user is not None and generate_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return redirect('create_profile')
 
 
 def signin(request):
@@ -150,6 +201,7 @@ def chats(request, pk):
     chats = Chat.objects.all()
     received_chats = Chat.objects.filter(sender=profile, receiver=current_user_profile, message_seen = False)
 
+
     context = {'friends': friends, 'user': user, 'last_msg':last_msg, 'current_user': current_user, 'friend':friend,
                 'form': form, 'current_user_profile': current_user_profile, 'profile': profile,  
                 'chats': chats, 'num': received_chats.count()}
@@ -186,7 +238,7 @@ def chat(request, pk):
             'msg_id': chat.id
         }
         msgs.append(res)
-
+    
     msgs = sorted(msgs, key=lambda x: (x['msg_id']))
     
     return JsonResponse(msgs, safe=False )
@@ -232,6 +284,68 @@ def not_seen(request, pk):
     
     return JsonResponse(message_list, safe=False)
 
+
+def delete_message(request, pk):
+   
+    message = Chat.objects.get(id=pk)
+
+    message.delete()
+
+    return JsonResponse(pk , safe=False)
+
+
+def send_message(request, pk):
+    user_profile = request.user.userprofile
+    friend = get_object_or_404(UserProfile, pk=pk)
+    friend_profile = UserProfile.objects.get(id=friend.id)
+    data = json.loads(request.body)
+    new_message = data["msg"]
+    new_chat_message = Chat.objects.create(body=new_message, sender=user_profile, receiver=friend_profile, message_seen=False)
+
+
+    return JsonResponse(new_chat_message.body, safe=False)
+        
+
+def get_last_message(request, pk):
+    user = request.user.userprofile
+    friend = get_object_or_404(UserProfile, pk=pk)
+    current_user_profile = request.user.userprofile
+    profile = UserProfile.objects.get(id = friend.id)
+    received_chats = Chat.objects.filter(sender=profile, receiver=current_user_profile)
+    sended_chats = Chat.objects.filter(sender=current_user_profile, receiver=profile)
+
+    msgs = []
+    for chat in received_chats:
+        res = {'sender': chat.sender.name,
+            'sender_id': chat.sender.id,
+            'receiver': chat.receiver.name,
+            'reveiver_id': chat.receiver.id,
+            'message': chat.body,
+            'msg_id': chat.id,
+        }
+        msgs.append(res)
+
+    chats = Chat.objects.filter(sender=current_user_profile, receiver=profile)
+    for chat in sended_chats:
+        res = {'sender': chat.sender.name,
+            'sender_id': chat.sender.id,
+            'receiver': chat.receiver.name,
+            'reveiver_id': chat.receiver.id,
+            'message': chat.body,
+            'msg_id': chat.id,
+        }
+        msgs.append(res)
+
+
+    msgs = sorted(msgs, key=lambda x: (x['msg_id']))
+
+    return JsonResponse(msgs[-1], safe=False)
+
+
+
+     
+
+
 def friends(request, pk):
 
     current_user = request.user
@@ -249,16 +363,10 @@ def friends(request, pk):
     sent_friend_requests = FriendRequest.objects.filter(sender=current_user.userprofile)
     rec_friend_requests = FriendRequest.objects.filter(receiver=current_user.userprofile)
 
-    print('---------')
-    print(friend_request_sender)
-
-
-
     context = {'user':user, 'current_user':current_user, 'friends':friends, 
                 'users':users, 'sent_friend_requests': sent_friend_requests,
                 'rec_friend_requests': rec_friend_requests, 'user_profile': user_profile,
                  'current_user_friends': current_user_friends, 'friend_request_sender': friend_request_sender}
-
 
     return render(request, 'profile/friends.html', context)
 
@@ -283,6 +391,7 @@ def send_friend_request(request, pk):
         return redirect('profile', pk=pk)
     else:
         return redirect('profile', pk=pk)
+
 
 def isFriendRequestExists(sender, receiver):
     print('checking...')
@@ -404,47 +513,4 @@ def friendNotifications(request):
         arr.append(requests.count())
 
     return JsonResponse(arr, safe=False)
-
-def send_message(request, pk):
-    user_profile = request.user.userprofile
-    friend = get_object_or_404(UserProfile, pk=pk)
-    friend_profile = UserProfile.objects.get(id=friend.id)
-    data = json.loads(request.body)
-    new_message = data["msg"]
-    new_chat_message = Chat.objects.create(body=new_message, sender=user_profile, receiver=friend_profile, message_seen=False)
-
-    return JsonResponse(new_chat_message.body, safe=False)
-        
-def get_last_message(request, pk):
-    user = request.user.userprofile
-    friend = get_object_or_404(UserProfile, pk=pk)
-    current_user_profile = request.user.userprofile
-    profile = UserProfile.objects.get(id = friend.id)
-    received_chats = Chat.objects.filter(sender=profile, receiver=current_user_profile)
-    sended_chats = Chat.objects.filter(sender=current_user_profile, receiver=profile)
-    msgs = []
-    for chat in received_chats:
-        res = {'sender': chat.sender.name,
-            'sender_id': chat.sender.id,
-            'receiver': chat.receiver.name,
-            'reveiver_id': chat.receiver.id,
-            'message': chat.body,
-            'msg_id': chat.id,
-        }
-        msgs.append(res)
-
-    chats = Chat.objects.filter(sender=current_user_profile, receiver=profile)
-    for chat in sended_chats:
-        res = {'sender': chat.sender.name,
-            'sender_id': chat.sender.id,
-            'receiver': chat.receiver.name,
-            'reveiver_id': chat.receiver.id,
-            'message': chat.body,
-            'msg_id': chat.id
-        }
-        msgs.append(res)
-
-    msgs = sorted(msgs, key=lambda x: (x['msg_id']))
-
-    return JsonResponse(msgs[-1], safe=False)
 

@@ -208,6 +208,18 @@ img{
     background-color: #333;
     color: white;
     border-radius: 18px 18px 0 18px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.delete-msg{
+    position: absolute;
+    bottom: 0; 
+    right: 0;
+    background-color: inherit;
+    color: red;
+    border: none;
 }
 
 .chat-window .incoming{
