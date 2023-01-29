@@ -28,8 +28,8 @@
 </style>
 
 <div id="sb" class="sidebar">
-    <a href="{% url 'profile' current_user.id%}" id="myPage"><i class="fa-solid fa-user"></i></a>
-    <a href="{% url 'friends' current_user.id %}" id="frineds"><i class="fa-solid fa-users"></i></a>
-    <a href="{% url 'chats' current_user.id %}" id="chats"><i class="fa-sharp fa-solid fa-comments"></i></a>
+    <a href="{% url 'profile' current_user.userprofile.id%}" id="myPage"><i class="fa-solid fa-user"></i></a>
+    <a href="{% url 'friends' current_user.userprofile.id %}" id="frineds"><i class="fa-solid fa-users"></i></a>
+    <a href="{% url 'chats' current_user.userprofile.id %}" id="chats"><i class="fa-sharp fa-solid fa-comments"></i></a>
     <a href="{% url 'signout' %}" id="logOut"><i class="fa-solid fa-right-from-bracket"></i></a>
 </div>

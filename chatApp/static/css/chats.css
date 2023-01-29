@@ -7,6 +7,7 @@ html, body {
     background-color: #afefd4a9;
     ;
 }
+
 /*
 .container {
     background-color: green;
@@ -274,3 +275,11 @@ img{
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+
+.main .friend {
+    transition:  all ease 500ms;
+}
+
+.main .friend.hide {
+    display: none;
+}

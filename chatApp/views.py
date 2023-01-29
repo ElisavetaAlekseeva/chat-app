@@ -37,6 +37,7 @@ def signup(request):
 
         if password == password2:
             if User.objects.filter(username=username).exists():
+                messages.info(request, 'This username already exist')
                 return redirect('signup')
 
             # elif User.objects.filter(email=email).exists():
@@ -50,12 +51,12 @@ def signup(request):
                 login(request, user_login)
 
                 user_model = User.objects.get(username=username)
-                user_profile = UserProfile.objects.create(user_id=user_model.id)
+                user_profile = UserProfile.objects.create(user_id=user_model.id + 1)
                 user.is_active = False
 
                 user_profile.save()
 
-                messages.success(request, 'Your account has been successfully created. We have sent you a confirmation email, please confirm your email address in order to activate your account.')
+                # messages.success(request, 'Your account has been successfully created. We have sent you a confirmation email, please confirm your email address in order to activate your account.')
 
                 # EMAIL
                 subject = 'Welcome to Lisa Chat App!'
@@ -85,10 +86,10 @@ def signup(request):
 
                 return redirect('create_profile')
 
-        else:
-            messages.info(request, 'Password is Uncorrect')
+        elif password != password2:
+            messages.info(request, 'Password is incorrect')
             return redirect('signup')
-    
+
     else: 
         return render(request, 'signup.html')
 
@@ -201,7 +202,11 @@ def chats(request, pk):
     chats = Chat.objects.all()
     received_chats = Chat.objects.filter(sender=profile, receiver=current_user_profile, message_seen = False)
 
-
+    # if 'q' in request.GET:
+    #     q = request.GET['q']
+    #     friends = UserProfile.objects.filter(friends__icontains = q)
+    # else:
+    #     friends = user.friends.all()
     context = {'friends': friends, 'user': user, 'last_msg':last_msg, 'current_user': current_user, 'friend':friend,
                 'form': form, 'current_user_profile': current_user_profile, 'profile': profile,  
                 'chats': chats, 'num': received_chats.count()}
@@ -514,3 +519,12 @@ def friendNotifications(request):
 
     return JsonResponse(arr, safe=False)
 
+# def searchBar(request):
+#     if request.method == 'GET':
+#         query = request.GET.get('query')
+#         if query:
+#             friends = UserProfile.objects.filter(name__icontains=query)
+#             return render(request, 'chats.html', {'friends': friends})
+#         else:
+#             print('No information to show')
+#             return request(request, 'chats.html', {})

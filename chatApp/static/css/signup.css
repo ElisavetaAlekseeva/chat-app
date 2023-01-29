@@ -22,10 +22,15 @@ body{
     flex-direction: column;
 }
 
+.right-side .form{
+    padding: 45px 0;
+}
+
 .left-side .container{
     display: flex;
     justify-content: center;
     flex-direction: column;
+    padding: 75px 0;
 }
 
 .right-side{
@@ -39,4 +44,46 @@ body{
 
 .right-side .form form .input{
     margin: 30px;
+}
+
+#logo{
+    font-size: 38px;
+    font-weight: 700;
+}
+
+button a{
+    text-decoration: none;  
+    color: #2ab57b;
+}
+
+button a:hover{
+    text-decoration: none;  
+    color: #ffffff;
+}
+
+button {
+    padding: 15px 25px;
+    font-size: 24px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    background-color: #fff;
+    color: #2ab57b;
+    border: none;
+    border-radius: 15px;
+}
+
+.left-side button{
+    background-color: #2ab57b !important;
+    color: #ffffff !important;
+}
+  
+button:hover {
+    background-color:  #13dd89;
+    color: #ffffff;
+}
+  
+button:active {
+    background-color:  #13dd89;
+    box-shadow: inset 3px 3px rgba(55, 54, 54, 0.339);
 }

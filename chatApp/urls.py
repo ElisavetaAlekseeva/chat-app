@@ -33,5 +33,5 @@ urlpatterns = [
     path("notification", notifications, name="notifications"),
     path('send_message/<int:pk>', send_message, name="send_message"),
     path('get_last_message/<int:pk>', get_last_message, name='get_last_message'),
-    path('activate/<uidb64>/<token>', activate, name='activate')
+    path('activate/<uidb64>/<token>', activate, name='activate'),
 ]

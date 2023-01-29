@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/4606228898.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/mustard-ui@latest/dist/css/mustard-ui.min.css"> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous" defer></script>
     <link rel="stylesheet" href="{% static 'css/chats.css' %}">
     <title>Document</title>
@@ -20,14 +21,11 @@
 
             <div class="left-side">
 
-                <div class="header">
-                    
+                <div class="header" style="height: 7.5vh; background: transparent;">
                     <div class="searching">
-                        <input type="text" placeholder="Search..">
+                        <input type="text" placeholder="Search.." id="elastic">
                     </div>
-                    
                 </div>
-
                 <div class="main">
                     {% for friend in friends %}
                         <div class="friend" id="{{friend.id}}" onclick="getChat('{{friend.id}}', '{{friend.name}}', '{{friend.image.url}}')">
@@ -262,6 +260,26 @@
                     message = document.getElementById(r);
                     message.style.display = 'none';
                 })
+        }
+
+        document.querySelector('#elastic').oninput = function(){
+            let val = this.value.trim();
+            let elasticItems = document.querySelectorAll('.main .friend')
+            if (val != '') {
+                elasticItems.forEach(function (elem) {
+                    if (elem.innerText.search(val) == -1) {
+                        elem.classList.add('hide');
+                    }
+                    else {
+                        elem.classList.remove('hide');
+                    }
+                });
+            }
+            else {
+                elasticItems.forEach(function (elem) {
+                    elem.classList.remove('hide');
+                });
+            }
         }
 
     </script>
