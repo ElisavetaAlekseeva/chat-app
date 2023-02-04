@@ -82,7 +82,6 @@
         }
 
         function getChat(id, name, img){
-
             if (!friendId) {
                 setInterval(getNewMessages, 800)
             }
@@ -114,6 +113,7 @@
                                     <span>${friendName}</span>
                                 </div>
                             </a>
+                            <input type="text" placeholder="Search.." id="search">
                         </div>
             
                         <div class="chat-window" id="chat-window">
@@ -142,7 +142,51 @@
                 const objDiv = document.getElementById("chat-window");
                 objDiv.scrollTop = objDiv.scrollHeight;
             }
+
+            document.querySelector('#search').oninput = function(){
+                let val = this.value.trim();
+                let elasticItemsOut = document.querySelectorAll('.message .outgoing .details p span')
+                let elasticItemsIn = document.querySelectorAll('.message .incoming .details p')
+                if (val != '') {
+                    elasticItemsOut.forEach(function (elem) {
+                        if (elem.innerText.search(val) == -1) {
+                            elem.classList.remove('msgOut');
+                            elem.innerHTML = elem.innerText;
+                        }
+                        else {
+                            elem.classList.add('msgOut');
+                            let str = elem.innerText;
+                            elem.innerHTML = insertMark(str, elem.innerText.search(val), val.length);
+                        }
+                    });
+                    elasticItemsIn.forEach(function (elem) {
+                        if (elem.innerText.search(val) == -1) {
+                            elem.classList.remove('msgIn');
+                            elem.innerHTML = elem.innerText;
+                        }
+                        else {
+                            elem.classList.add('msgIn');
+                            let str = elem.innerText;
+                            elem.innerHTML = insertMark(str, elem.innerText.search(val), val.length);
+                        }
+                    });
+                }
+                else {
+                    elasticItemsOut.forEach(function (elem) {
+                        elem.classList.remove('msgOut');
+                        elem.innerHTML = elem.innerText;
+                    });
+                    elasticItemsIn.forEach(function (elem) {
+                        elem.classList.remove('msgIn');
+                        elem.innerHTML = elem.innerText;
+                    });
+                }
+            }
         }  
+               
+        function insertMark(string, pos, len){
+            return string.slice(0, pos) + '<mark>' + string.slice(pos, pos + len) + '</mark>' + string.slice(pos+len);
+        }
 
         document.addEventListener("keyup", function(event) {
         if (event.keyCode === 13 && !event.shiftKey) {
@@ -177,7 +221,7 @@
             if (message.sender_id == '{{user.id}}') {
                 div.innerHTML = `<div class="message outgoing" id='${message.msg_id}'>
                                     <div class="details">
-                                        <p>${message.message} 
+                                        <p> <span> ${message.message} </span>
                                             <button onclick="delete_message(${message.msg_id})" class="trash-bin delete-msg"><i class="fa-solid fa-trash"></i></button>
                                         </p>
                                     </div>
@@ -217,7 +261,7 @@
         
                 div.innerHTML = `<div class="message outgoing">
                                     <div class="details">
-                                        <p>${data.msg}
+                                        <p> <span> ${data.msg} </span>
                                             <button class="trash-bin delete-msg" onclick="delete_message()"><i class="fa-solid fa-trash"></i></button>
                                         </p>
                                     </div>

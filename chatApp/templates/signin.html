@@ -1,4 +1,4 @@
-{% load static %}
+{% load static account socialaccount %}
 
     <form class="form form-in" method="post">
         {% csrf_token %}
@@ -11,7 +11,12 @@
         <div class="button">
             <button type="submit">Signin</button>
         </div>
+        <div class="col-md-8 mx-auto social-container my-2 order-md-1">
+            <button class="btn btn-primary mb-2">
+                <a href="{% provider_login_url 'google' %}?next=vk.com/">
+                    Login with Google
+                </a>
+            </button>
+        </div>
     </form>
-
-
 

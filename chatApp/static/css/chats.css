@@ -212,6 +212,7 @@ img{
     display: flex;
     align-items: center;
     position: relative;
+    padding: 13px 65px 20px 10px;
 }
 
 .delete-msg{
@@ -276,10 +277,22 @@ img{
     text-overflow: ellipsis;
   }
 
-.main .friend {
+.main .friend{
     transition:  all ease 500ms;
 }
 
-.main .friend.hide {
+.main .friend.hide{
     display: none;
+}
+
+.message .outgoing .details p, .message .incoming .details p {
+    transition:  all ease 500ms;
+}
+
+.message .outgoing .details p.msgOut, .message .incoming .details p.msgIn {
+    color: black;
+}
+
+mark{
+    background-color: yellow;
 }

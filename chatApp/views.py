@@ -51,7 +51,8 @@ def signup(request):
                 login(request, user_login)
 
                 user_model = User.objects.get(username=username)
-                user_profile = UserProfile.objects.create(user_id=user_model.id + 1)
+                user_profile = UserProfile.objects.create(user_id = user_model.id)
+                user_profile.name = username
                 user.is_active = False
 
                 user_profile.save()
@@ -59,29 +60,29 @@ def signup(request):
                 # messages.success(request, 'Your account has been successfully created. We have sent you a confirmation email, please confirm your email address in order to activate your account.')
 
                 # EMAIL
-                subject = 'Welcome to Lisa Chat App!'
-                message = f'Hello {user.username}! \n Welcome to Lisa Chat App! \n We sent you a confirmation email, please confirm your email address in order to activate your account.'
-                from_email = settings.EMAIL_HOST_USER
-                to_list = [user.email]
-                send_mail(subject, message, from_email, to_list, fail_silently=True)
+                # subject = 'Welcome to Lisa Chat App!'
+                # message = f'Hello {user.username}! \n Welcome to Lisa Chat App! \n We sent you a confirmation email, please confirm your email address in order to activate your account.'
+                # from_email = settings.EMAIL_HOST_USER
+                # to_list = [user.email]
+                # send_mail(subject, message, from_email, to_list, fail_silently=True)
 
-                current_site = get_current_site(request)
-                email_subject = 'Confirm your email @ Lisa Chat App'
-                message2 = render_to_string('email_confirmation.html', {
-                            'name': user.username,
-                            'domain': current_site.domain,
-                            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                            'token': generate_token.make_token(user)
-                            })
+                # current_site = get_current_site(request)
+                # email_subject = 'Confirm your email @ Lisa Chat App'
+                # message2 = render_to_string('email_confirmation.html', {
+                #             'name': user.username,
+                #             'domain': current_site.domain,
+                #             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                #             'token': generate_token.make_token(user)
+                #             })
 
-                email = EmailMessage(
-                    email_subject,
-                    message2,
-                    settings.EMAIL_HOST_USER,
-                    [user.email],
-                )
-                email.fail_silently = True
-                email.send()
+                # email = EmailMessage(
+                #     email_subject,
+                #     message2,
+                #     settings.EMAIL_HOST_USER,
+                #     [user.email],
+                # )
+                # email.fail_silently = True
+                # email.send()
 
 
                 return redirect('create_profile')
@@ -519,12 +520,6 @@ def friendNotifications(request):
 
     return JsonResponse(arr, safe=False)
 
-# def searchBar(request):
-#     if request.method == 'GET':
-#         query = request.GET.get('query')
-#         if query:
-#             friends = UserProfile.objects.filter(name__icontains=query)
-#             return render(request, 'chats.html', {'friends': friends})
-#         else:
-#             print('No information to show')
-#             return request(request, 'chats.html', {})
+# def signup_redirect(request):
+#     messages.error(request, 'Something wrong here')
+#     return redirect('signup')

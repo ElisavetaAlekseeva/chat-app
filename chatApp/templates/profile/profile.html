@@ -1,4 +1,4 @@
-{% load static %}
+{% load static account socialaccount %}
 {% block content %}
 
 
@@ -115,8 +115,6 @@
     {% else %}
         <div class="container">
             
-            
-
         <div class="section">  
 
                 <div class="col col-1">
@@ -141,7 +139,7 @@
                 <div class="col col-2">
                     <div class="header">
                         <div class="name">
-                            {{user_profile.name}} 
+                            {{user.username}} 
                         </div>
                         <!-- <div class="update">
                             <a href="{% url 'create_profile' %}">UPDATE</a>

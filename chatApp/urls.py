@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 from .views import (delete_message, friends, signup, signin, signout, 
                     profile, create_profile, 
                     chats, chat, sentMessage,
@@ -11,6 +11,7 @@ from .views import (delete_message, friends, signup, signin, signout,
 
 
 urlpatterns = [
+    path('accounts/', include('allauth.urls')),
     path('signup', signup, name='signup'),
     path('', signin, name='signin'),
     path('signout', signout, name='signout'),
