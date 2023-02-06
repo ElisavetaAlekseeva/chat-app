@@ -1,6 +1,7 @@
 from email.mime import image
 from django.db import models
 from django.contrib.auth.models import User
+from traitlets import default
 # Create your models here.
 
 
@@ -9,7 +10,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User,blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     image = models.ImageField(default='defaultimg.jpg', null=True, blank=True)
-    hobbies = models.CharField(max_length=200, null=True)
+    mode = models.BooleanField(default=True)
     location = models.CharField(max_length=100, blank=True)
     friends = models.ManyToManyField('UserProfile', related_name='users_friends', default='', blank=True)
     user_friend = models.ManyToManyField('Friend', related_name='user_friend', default='',blank=True)

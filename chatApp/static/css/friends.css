@@ -8,74 +8,74 @@
 
 body{
     display: flex;
-    align-items: center;
-    justify-content: center;
     height: 100vh;
     background-color: #afefd4a9;
 }
 
 .container{
     height: 100vh;   
-}
-
-.header{
-    margin: 80px 50px 0 50px;
+    width: 100%;
     display: flex;
-    align-items: baseline;
-    justify-content: center;
-    font-size: 24px;
 }
 
-.header .title{
-    font-size: 40px;
-    font-weight: bold;
-    margin: 10px;
+.left-container{
+    height: 100vh;
+    width: 70%;
+    padding: 60px 40px;
 }
 
-.search{
-    margin: 30px 0 50px 0;
+.right-container{
+    height: 100vh;
+    width: 30%;
+    padding: 60px 40px;
+}
+
+h2{
+    color: rgb(77, 74, 74);
+}
+
+.left-container h2, .left-container h6{
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.main{
-    /* border: 1px solid black; */
-    max-height: 60vh;
-    /* overflow-y: auto; */
+.left-container h6{
+    word-spacing: 10px;
+    color: rgb(52, 50, 50);
 }
 
-.friend, .users, .notifications{
-    max-height: 20vh;
+.users{
+    height: 90%;
     overflow-y: auto;
+    margin-top: 50px;
 }
 
-.friend, .user{
-    margin: 10px;
-    padding: 0 25%;
-    /* padding-bottom: 20px; */
+.user{
+    margin: 30px;
+    padding: 0 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* border-bottom: 1px solid black; */
 }
 
 a{
     text-decoration: none;
 } 
 
-.btn i{
+.btn2 i{
     font-size: 20px;
     color: #2ab57b;
 }
-.btn-chat i:hover{
+.chat i:hover{
     color: #13dd89;
 }
 
 .delete-friend i:hover{
     color: rgb(209, 13, 13);
 }
-.friend a .content , .user a .content{
+
+.content{
     display: flex;
     align-items: center;
 }
@@ -83,7 +83,7 @@ a{
 .friend a .content .details , .user a .content .details{
     padding-top: 15px;
     color: black;
-    margin-left: 50px;
+    margin-left: 30px;
     font-size: 14px;
 }
 
@@ -102,6 +102,16 @@ a{
     padding: 0 15px;
 }
 
+.btn{
+    background-color: #2ab57b;;
+    color: white;
+}
+
+.btn:hover{
+    color: white;
+    background-color: #13dd89;
+}
+
 img{
     border-radius: 50%;
     width: 40px;
@@ -109,6 +119,62 @@ img{
 }
 
 
-  
-  
+.notifications, .friends, .notification, .friend{
+    background-color: rgba(205, 205, 213, 0.266);
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 10px;
+}
 
+.notifications{
+    height: 30%;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.scroll{
+    overflow-y: auto;
+    height: 80%;
+}
+
+.friends{
+    height: 70%;
+    margin-top: 20px;
+}
+
+.notification{
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+/* .fr-request{
+    width: 30px;
+    height: 10px;
+    color: black;
+} */
+
+.accept-request, .decline-request, .chat, .delete{
+    margin: 5px;
+    height: 30px;
+}
+
+.request{
+    font-size: 11px;
+}
+
+a, a:hover{
+    color: whitesmoke;
+}
+
+.friend{
+    display: flex;
+    align-items: center;
+}
+
+.details span{
+    color: black;
+    font-size: 14px;
+    font-weight: 700;
+}

@@ -184,3 +184,170 @@
         </form>
     </div>
 </div>
+
+
+
+
+
+<!-- //profile -->
+
+<div class="col col-1">
+    <div class="info">
+        <div class="location">
+            <i class="fa-solid fa-location-dot"></i>
+            {{current_user_profile.location}}
+        </div>
+        <div class="email">
+            <i class="fa-solid fa-at"></i>
+            <a href="#"> {{current_user.email}} </a>
+        </div>
+        <!-- <div class="quote">
+            <i class="fa-solid fa-quote-left"></i>
+            <div class="text">
+                Bla Bla
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<div class="col col-2">
+    <div class="header">
+        <div class="name">
+            {{user.username}} 
+        </div>
+        <!-- <div class="update">
+            <a href="{% url 'create_profile' %}">UPDATE</a>
+        </div> -->
+        <!-- WAS COMENTED -->
+        <div id="icon" class="icon">
+            <a class="a-icon" href="{% url 'create_profile' %}"><i class="fa-solid fa-pen"></i></a>
+        </div>
+    </div>
+    <div class="image">
+        <img cid='pr_image' src="{{current_user.userprofile.image.url}}" alt="">
+    </div>
+    <div class="buttons">
+        
+    </div>
+</div>
+
+<div class="col col-3">
+    <div class="friends_link">
+        <h1><a href="{%url 'friends' current_user.id%}">Friends:</a></h1>
+    </div>
+
+    <div class="friends">
+        {% for friend in current_user_friends %}
+            <div class="friend">
+                <a href="{% url 'profile' friend.id %}">
+                    <div class="friend_img"><img cid='pr_image' src="{{friend.image.url}}" alt=""></div>
+                    <div class="friend_name">{{friend.name}}</div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+FRIENFS
+<div class="header">
+    <div class="title">
+        <span>Friends</span>
+    </div>
+    <div class="requests">
+        <i class="fa-solid fa-bell"></i>
+    </div>
+</div>
+
+
+<div class="main">
+    Notifications:
+    <br>
+    <div class="notifications">
+        {% for request in rec_friend_requests %}
+            <div class="notification">
+                from: {{request.sender}}
+                <div class="buttons">
+                    <div class="btn accept-request">
+                        <a href="{% url 'accept_friend_request' request.pk %}">
+                            <button type="button" class="btn btn-info btn-sm btn-block mb-2">
+                            Accept Friend Request
+                            </button>
+                        </a>
+                    </div>
+                    
+                    <div class="btn decline-request">
+                        <a href="{% url 'decline_friend_request' request.pk %}">
+                            <button type="button" class="btn btn-info btn-sm btn-block mb-2">
+                            Decline Friend Request
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+<hr>
+
+
+    All Users:
+    <br>        
+    <div class="users">
+        {% for user in users %}
+        {% if user != current_user and user.userprofile not in current_user_friends %}
+
+        <div class="user">
+            <a href="{% url 'profile' user.id %}">
+                <div class="content">
+                    <img id='pr_image' src="{{user.userprofile.image.url}}" alt="">
+                    <div class="details">
+                        <span>{{user.userprofile.name}}</span>
+                        <p>{{user.userprofile.location}}</p>
+                    </div>
+                </div>
+            </a>
+            <div class="buttons">
+                <div class="btn send-request">
+                    <a href="{% url 'send_friend_request' user.id %}">
+                        <button type="button" class="btn btn-success btn-lg btn-block mb-2">
+                            Send Friend Request
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>      
+        {% endif %}
+        {% endfor %}
+    </div> 
+
+<hr>
+My Friends:
+<br>
+<div class="friends">
+    {% for friend in current_user_friends %}
+        <div class="friend">
+
+            <a href="{% url 'profile' friend.id %}">
+                <div class="content">
+                    <img id='pr_image' src="{{friend.image.url}}" alt="">
+                    <div class="details">
+                        <span>{{friend.name}}</span>
+                        <p>{{friend.location}}</p>
+                    </div>
+                </div>
+            </a>
+            <div class="buttons">
+                <div class="chat">
+                    <a href="{% url 'chats' current_user.id %}"><i class="fa-regular fa-message"></i></a>
+                </div>
+                <div class="delete">
+                    <a href="{% url 'delete_friend' friend.id %}" class="trash-bin"><i class="fa-solid fa-trash"></i></a>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+</div>

@@ -5,6 +5,8 @@ from tokenize import generate_tokens
 from urllib import response
 from venv import create
 from wsgiref.util import request_uri
+from certifi import where
+from django.dispatch import receiver
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
@@ -12,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib import messages
+from sqlalchemy import true
 from .forms import ProfileForm, ChatForm
 from .models import UserProfile, Chat, FriendRequest, Friend
 from itertools import chain
@@ -167,21 +170,26 @@ def create_profile(request):
 
             if request.FILES.get('image') == None:
                 image = current_user_profile.image
-                hobbies = request.POST['hobbies']
                 location = request.POST['location']
+                if request.POST.get('mode') == 'on':
+                    current_user_profile.mode = True
+                else:
+                    current_user_profile.mode = False
+
 
                 current_user_profile.image = image
-                current_user_profile.hobbies = hobbies
                 current_user_profile.location = location
                 current_user_profile.save()
 
             if request.FILES.get('image') != None:
                 image = request.FILES.get('image')
-                hobbies = request.POST['hobbies']
                 location = request.POST['location']
+                if request.POST.get('mode') == 'on':
+                    current_user_profile.mode = True
+                else:
+                    current_user_profile.mode = False
 
                 current_user_profile.image = image
-                current_user_profile.hobbies = hobbies
                 current_user_profile.location = location
                 current_user_profile.save()
         
@@ -247,7 +255,7 @@ def chat(request, pk):
     
     msgs = sorted(msgs, key=lambda x: (x['msg_id']))
     
-    return JsonResponse(msgs, safe=False )
+    return JsonResponse(msgs, safe=False)
 
 
 
@@ -353,18 +361,22 @@ def get_last_message(request, pk):
 
 
 def friends(request, pk):
-
+    users = User.objects.all()
+    user = get_object_or_404(User, pk=pk)
+    user_profile = UserProfile.objects.get(user = user)
+    friends = user_profile.friends.all()
     current_user = request.user
+
     current_user_profile = current_user.userprofile
     current_user_friends = current_user_profile.friends.all()
     friend_request_sender = FriendRequest.sender
 
+    receivers = []
+    
+    for user in users:
+        if user not in current_user_friends and FriendRequest.objects.filter(sender=current_user.userprofile, receiver=user.userprofile):
+            receivers.append(user)
 
-    user = get_object_or_404(User, pk=pk)
-    user_profile = UserProfile.objects.get(user = user)
-    friends = user_profile.friends.all()
-
-    users = User.objects.all()
 
     sent_friend_requests = FriendRequest.objects.filter(sender=current_user.userprofile)
     rec_friend_requests = FriendRequest.objects.filter(receiver=current_user.userprofile)
@@ -372,7 +384,7 @@ def friends(request, pk):
     context = {'user':user, 'current_user':current_user, 'friends':friends, 
                 'users':users, 'sent_friend_requests': sent_friend_requests,
                 'rec_friend_requests': rec_friend_requests, 'user_profile': user_profile,
-                 'current_user_friends': current_user_friends, 'friend_request_sender': friend_request_sender}
+                 'current_user_friends': current_user_friends, 'friend_request_sender': friend_request_sender, 'receivers': receivers}
 
     return render(request, 'profile/friends.html', context)
 
@@ -520,6 +532,8 @@ def friendNotifications(request):
 
     return JsonResponse(arr, safe=False)
 
-# def signup_redirect(request):
-#     messages.error(request, 'Something wrong here')
-#     return redirect('signup')
+def mode(request):
+    current_user_profile = request.user.userprofile
+    users_mode = current_user_profile.mode
+    list = [users_mode]
+    return JsonResponse(list, safe=False)

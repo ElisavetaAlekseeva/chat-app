@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'dark',
 ]
 
 MIDDLEWARE = [
@@ -92,7 +93,7 @@ WSGI_APPLICATION = 'chat.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chat2311',
+        'NAME': 'chat',
         'USER':'postgres',
         'PASSWORD': 'pg2022Lisa',
         'HOST': 'localhost',

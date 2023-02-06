@@ -22,154 +22,96 @@
 
 
 {% if user != current_user %}
-
     <div class="container">
-
-        <div class="section">  
-            
-            <div class="col col-1">
-                <div class="info">
-                    <div class="location">
-                        <i class="fa-solid fa-location-dot"></i>
-                        {{user_profile.location}}
-                    </div>
-                    <div class="email">
-                        <i class="fa-solid fa-at"></i>
-                        <a href="#"> {{user.email}} </a>
-                    </div>
-                    <div class="quote">
-                        <i class="fa-solid fa-quote-left"></i>
-                        <p>mama papa ya </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col col-2">
-                <div class="header">
-                    <div class="name">
-                        {{user_profile.name}}
-                    </div>
-                    <div id="icon" class="icon">
-                        {% if user_profile in current_user_friends %}
-                            <i class="fa-solid fa-user-check"></i>
-                        {% endif %}
-                    </div>
-                </div>
+        <div id="sectionMode1" class="section">  
+            <div class="profile" id="profile">
                 <div class="image">
                     <img id='pr_image' src="{{user_profile.image.url}}" alt="">
                 </div>
-                <div class="buttons">
-                    <div class="message">
-                        <a href="{% url 'chats' current_user.id %}">
-                            <button class="btn" role="button">
-                                <i class="fa-solid fa-envelope"></i>
-                            </button>
-                        </a>
-                    </div>
-                    <div class="friend-status">
-                        {% if user_profile in current_user_friends %}
-                            <a href="{% url 'delete_friend' user.id %}">
-                                <button type="button" class="btn btn-status">
-                                    <i class="fa-solid fa-user-minus"></i>
-                                </button>
-                            </a>
-
-                        {% elif user_profile not in current_user_friends and not sent_friend_request %}
-                            <a href="{% url 'send_friend_request' user.id %}">
-                                <button type="button" class="btn btn-status">
-                                    <i class="fa-solid fa-user-plus"></i>
-                                </button>
-                            </a>
-                            
-                        {% elif user_profile not in current_user_friends and sent_friend_request%}
-                            <a href="{% url 'delete_friend_request' user.id %}">
-                                <button type="button" class="btn btn-status">
-                                    <i class="fa-solid fa-user-minus"></i>
-                                </button>
-                            </a>
-                        {%endif%}
-                    </div>
+                <div class="name">
+                    {{user_profile.name}}
                 </div>
-            </div>
-
-            <div class="col col-3">
-                <div class="friends_link">
-                    <h1><a href="{%url 'friends' user_profile.id%}">Friends:</a></h1>
+                <div class="email">
+                    <i class="fa-solid fa-at"></i>
+                    <a href="#" style="color: black;"> {{user.email}} </a>
                 </div>
-
                 <div class="friends">
-                    {% for friend in user_friends %}
-                        <div class="friend">
-                            <a href="{% url 'profile' friend.id %}">
-                                <div class="friend_img"><img id='pr_image' src="{{friend.image.url}}" alt=""> </div>
-                                <div class="friend_name">{{ friend.name }}</div> 
-                            </a>
-                        </div>                    
-                    {% endfor %}
+                    <div class="container2 scrolling-wrapper">
+                        {% for friend in user_friends %}
+                                <div class="border">
+                                    <a href="{% url 'profile' friend.id %}">
+                                        <div class="card card0"  style="width: 100px; height: 150px; background: url({{friend.image.url}}) center center no-repeat; background-size: 150px">
+                                            <h2>{{friend.name}}</h2>
+                                            <div class="icons">
+                                                <i class="fa fa-facebook" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                        {% endfor %}
+                      </div>
+                </div>
+                <div class="iconProfile icon-left message">
+                        <a href="{% url 'chats' current_user.id %}">
+                                <i class="fa-solid fa-envelope"></i>
+                        </a>
+                </div>
+                <div class="iconProfile icon-right friend-status">
+                    {% if user_profile in current_user_friends %}
+                        <a href="{% url 'delete_friend' user.id %}">
+                                <i class="fa-solid fa-user-minus"></i>
+                        </a>
+
+                    {% elif user_profile not in current_user_friends and not sent_friend_request %}
+                        <a href="{% url 'send_friend_request' user.id %}">
+                                <i class="fa-solid fa-user-plus"></i>
+                        </a>
+                        
+                    {% elif user_profile not in current_user_friends and sent_friend_request%}
+                        <a href="{% url 'delete_friend_request' user.id %}">
+                                <i class="fa-solid fa-user-minus"></i>
+                        </a>
+                    {%endif%}
                 </div>
             </div>
-
         </div>
     </div>
     
     {% else %}
         <div class="container">
-            
-        <div class="section">  
-
-                <div class="col col-1">
-                    <div class="info">
-                        <div class="location">
-                            <i class="fa-solid fa-location-dot"></i>
-                            {{current_user_profile.location}}
-                        </div>
-                        <div class="email">
-                            <i class="fa-solid fa-at"></i>
-                            <a href="#"> {{current_user.email}} </a>
-                        </div>
-                        <div class="quote">
-                            <i class="fa-solid fa-quote-left"></i>
-                            <div class="text">
-                                Bla Bla
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col col-2">
-                    <div class="header">
-                        <div class="name">
-                            {{user.username}} 
-                        </div>
-                        <!-- <div class="update">
-                            <a href="{% url 'create_profile' %}">UPDATE</a>
-                        </div> -->
-                        <div id="icon" class="icon">
-                            <a class="a-icon" href="{% url 'create_profile' %}"><i class="fa-solid fa-pen"></i></a>
-                        </div>
-                    </div>
+            <div id="sectionMode2" class="section">  
+                <div class="profile">
                     <div class="image">
-                        <img cid='pr_image' src="{{current_user.userprofile.image.url}}" alt="">
+                        <img id='pr_image' src="{{current_user.userprofile.image.url}}" alt="">
                     </div>
-                    <div class="buttons">
-                        
+                    <div class="name">
+                        {{user.username}} 
                     </div>
-                </div>
-
-                <div class="col col-3">
-                    <div class="friends_link">
-                        <h1><a href="{%url 'friends' current_user.id%}">Friends:</a></h1>
+                    <div class="email">
+                        <i class="fa-solid fa-at"></i>
+                        <a href="#" style="color: black;"> {{current_user.email}} </a>
                     </div>
-
                     <div class="friends">
-                        {% for friend in current_user_friends %}
-                            <div class="friend">
-                                <a href="{% url 'profile' friend.id %}">
-                                    <div class="friend_img"><img cid='pr_image' src="{{friend.image.url}}" alt=""></div>
-                                    <div class="friend_name">{{friend.name}}</div>
-                                </a>
-                            </div>
-                        {% endfor %}
+                        <div class="container2 scrolling-wrapper">
+                            {% for friend in current_user_friends %}
+                                    <div class="border">
+                                        <a href="{% url 'profile' friend.id %}">
+                                            <div class="card card0"  style="width: 100px; height: 150px; background: url({{friend.image.url}}) center center no-repeat; background-size: 150px">
+                                                <h2>{{friend.name}}</h2>
+                                                <div class="icons">
+                                                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                            {% endfor %}
+                          </div>
+                    </div>
+                    <div class="iconProfile icon-left">
+                        <a class="a-icon" href="{% url 'create_profile' %}"><i class="fa-solid fa-pen"></i></a>
+                    </div>
+                    <div class="iconProfile icon-right">
+                        <a href="{% url 'signout' %}" id="logOut"><i class="fa-solid fa-right-from-bracket"></i></a>
                     </div>
                 </div>
             </div>
@@ -177,6 +119,24 @@
 
 {% endif %}
 
+
+    <!-- <script>
+        function mode() {
+            fetch("{% url 'mode' %}")
+                .then(e => e.json())
+                .then(mode => {
+                    if (mode[0] == false) {
+                        body = document.querySelector('body');
+                        body.style.backgroundColor = '#262626';
+                        document.getElementsByClassName('section').style.backgroundColor = '#afefd445';
+                        document.getElementById('profile').style.backgroundColor = '#505858';
+                    }
+                })
+        }
+        mode()
+    </script> -->
 {% endblock content%}
 </body>
 </html>
+
+

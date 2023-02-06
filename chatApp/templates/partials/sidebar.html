@@ -6,7 +6,8 @@
         z-index: 1;
         top: 0;
         left: 0;
-        background-color: #111;
+        /* background-color: #111; */
+        background-color: #a3e6ca;
         overflow-x: hidden;
         transition: 0.5s;
         padding-top: 60px;
@@ -25,11 +26,50 @@
     .sidebar a:hover {
         color: #13dd89;
     }
+
 </style>
 
 <div id="sb" class="sidebar">
+    <!-- <a href="#"><i class="fa-solid fa-moon" id="lightMode"></i></a> -->
     <a href="{% url 'profile' current_user.userprofile.id%}" id="myPage"><i class="fa-solid fa-user"></i></a>
     <a href="{% url 'friends' current_user.userprofile.id %}" id="frineds"><i class="fa-solid fa-users"></i></a>
     <a href="{% url 'chats' current_user.userprofile.id %}" id="chats"><i class="fa-sharp fa-solid fa-comments"></i></a>
     <a href="{% url 'signout' %}" id="logOut"><i class="fa-solid fa-right-from-bracket"></i></a>
 </div>
+
+<!-- <script>
+    const mode = document.getElementById('lightMode');
+    const sidebar = document.getElementById('sb');
+    const section1 = document.getElementById('sectionMode1');
+    const section2 = document.getElementById('sectionMode2');
+    const body = document.querySelector('body');
+    mode.addEventListener('click', function(){
+        this.classList.toggle('fa-moon');
+        if(this.classList.toggle('fa-sun')){
+            sidebar.style.backgroundColor = 'black';
+            // section1.style.backgroundColor = 'black';
+            // section2.style.backgroundColor = 'black';
+            body.style.backgroundColor = 'red'
+            sidebar.style.transition = '2s';
+        } else {
+            body.style.backgroundColor = 'white'
+            sidebar.style.backgroundColor = '#a3e6ca';
+            section1.style.backgroundColor = '#afefd4a9';
+            section2.style.backgroundColor = '#afefd4a9';
+        }
+    })
+</script> -->
+<!-- 
+<script>
+    const sidebar = document.getElementById('sb');
+    function mode() {
+        fetch("{% url 'mode' %}")
+            .then(e => e.json())
+            .then(mode => {
+                if (mode[0] == false) {
+                    sidebar.style.backgroundColor = 'black';
+                }
+            })
+    }
+    mode() -->
+</script>

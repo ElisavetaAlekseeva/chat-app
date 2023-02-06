@@ -7,7 +7,7 @@ from .views import (delete_message, friends, signup, signin, signout,
                     delete_friend_request, accept_friend_request,
                     decline_friend_request, delete_friend,
                     friendNotifications, notifications, send_message, get_last_message,
-                    activate, delete_message)
+                    activate, delete_message, mode)
 
 
 urlpatterns = [
@@ -35,4 +35,5 @@ urlpatterns = [
     path('send_message/<int:pk>', send_message, name="send_message"),
     path('get_last_message/<int:pk>', get_last_message, name='get_last_message'),
     path('activate/<uidb64>/<token>', activate, name='activate'),
+    path('mode', mode, name='mode'),
 ]
