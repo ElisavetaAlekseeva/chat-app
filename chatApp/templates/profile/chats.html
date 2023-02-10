@@ -283,15 +283,20 @@
                 })
         }
 
-        function getLastMessages() {
+        async function getLastMessages() {
             const lastMessages = document.getElementsByClassName("lastMessage")
             for (let i = 0; i < lastMessages.length; i++) {
-                fetch(`/get_last_message/${lastMessages[i].innerText}`)
-                .then(e => e.json())
-                .then(message => {
-                    lastMessages[i].innerText = message.message
+                try {
+                    await fetch(`/get_last_message/${lastMessages[i].innerText}`)
+                        .then(e => e.json())
+                        .then(message => {
+                            lastMessages[i].innerText = message.message
+                            lastMessages[i].style.color = 'black'
+                        })
+                } catch (e) {
+                    lastMessages[i].innerText = 'No messages'
                     lastMessages[i].style.color = 'black'
-                })
+                }
             }
         }
 

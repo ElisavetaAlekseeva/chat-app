@@ -55,7 +55,7 @@
             <div class="notifications">
                 <h2 id="txt3">Notifications</h2>
                 {% if rec_friend_requests.count == 0 %}
-                    <h6>You have no new notifications</h6>
+                    <h6>You don'n have notifications</h6>
                 {% endif %}
                 <div class="scroll">
                     {% for request in rec_friend_requests %}
@@ -64,20 +64,20 @@
                                 <div class="content">
                                     <img id='pr_image' src="{{request.sender.image.url}}" alt="">
                                     <div class="details">
-                                        <span>{{request.sender}}</span>
+                                        <span class="senderName">{{request.sender}}</span>
                                     </div>
                                 </div>
                             </a>
                             <div class="buttons">
                                 <div class="btn accept-request">
                                     <a href="{% url 'accept_friend_request' request.pk %}">
-                                        <span class="request">Accept Friend Request</span>
+                                        <span class="request">Accept request</span>
                                     </a>
                                 </div>
                                 
                                 <div class="btn decline-request">
                                     <a href="{% url 'decline_friend_request' request.pk %}">
-                                    <span class="request"> Decline Friend Request</span>
+                                    <span class="request">Decline request</span>
                                     </a>
                                 </div>
                             </div>
@@ -93,7 +93,7 @@
                             <a href="{% url 'profile' friend.id %}">
                                 <div class="content">
                                     <img id='pr_image' src="{{friend.image.url}}" alt="">
-                                    <div class="details">
+                                    <div class="details fr-det">
                                         <span>{{friend.name}}</span>
                                     </div>
                                 </div>

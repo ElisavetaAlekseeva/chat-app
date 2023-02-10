@@ -6,7 +6,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = '__all__'
-        exclude = ['user', 'friends', 'user_friend', 'name']
+        exclude = ['user', 'friends', 'user_friend', 'name', 'mode']
 
 # class ProfileForm(forms.Form){
 #      your_name = forms.CharField(label='Your name', max_length=100)

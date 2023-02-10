@@ -105,6 +105,8 @@ a{
 .btn{
     background-color: #2ab57b;;
     color: white;
+    display: flex;
+    align-items: center;
 }
 
 .btn:hover{
@@ -147,6 +149,7 @@ img{
     width: 100%;
     display: flex;
     margin-bottom: 10px;
+    align-items: center;
 }
 
 /* .fr-request{
@@ -161,7 +164,7 @@ img{
 }
 
 .request{
-    font-size: 11px;
+    font-size: 10px;
 }
 
 a, a:hover{
@@ -177,4 +180,16 @@ a, a:hover{
     color: black;
     font-size: 14px;
     font-weight: 700;
+}
+
+.senderName{
+    padding: 10px;
+}
+
+.fr-det{
+    display: contents;
+}
+
+.fr-det span{
+    padding: 15px;
 }

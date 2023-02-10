@@ -39,7 +39,8 @@ label[for=id_image]{
 }
 
 .container .form form p {
-    font-size: 24px;
+    font-size: 26px;
+    padding: 20px
 }
 
 .container .form form .button{

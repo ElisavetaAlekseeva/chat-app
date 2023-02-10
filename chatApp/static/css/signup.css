@@ -87,3 +87,22 @@ button:active {
     background-color:  #13dd89;
     box-shadow: inset 3px 3px rgba(55, 54, 54, 0.339);
 }
+
+i{
+    font-size: 26px;
+    padding: 10px;
+    color: #2ab57b;
+}
+
+#text_icon, #form_icon{
+    color: black;
+    font-size: 30px;
+}
+
+input{
+    border-radius: 7px;
+    margin: 6px;
+    padding: 7px;
+    border-radius: 7px;
+    margin: 6px;
+}
